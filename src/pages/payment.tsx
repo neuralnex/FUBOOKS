@@ -115,7 +115,7 @@ export default function PaymentPage() {
               <div className="flex justify-between">
                 <span>Total Amount:</span>
                 <span className="text-primary font-bold text-xl">
-                  ₦{order.totalAmount.toFixed(2)}
+                  ₦{Number(order.totalAmount).toFixed(2)}
                 </span>
               </div>
             </div>

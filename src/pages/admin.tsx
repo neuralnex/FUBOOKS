@@ -102,7 +102,7 @@ export default function AdminPage() {
                   </div>
                   <div className="text-right">
                     <p className="text-primary font-bold text-xl">
-                      ₦{order.totalAmount.toFixed(2)}
+                      ₦{Number(order.totalAmount).toFixed(2)}
                     </p>
                     <p className="text-sm">Status: {order.orderStatus}</p>
                     <p className="text-sm">Payment: {order.paymentStatus}</p>
@@ -157,7 +157,7 @@ export default function AdminPage() {
                   <h3 className="font-semibold">{book.title}</h3>
                   <p className="text-sm text-default-600">{book.author}</p>
                   <p className="text-primary font-bold">
-                    ₦{book.price.toFixed(2)}
+                    ₦{Number(book.price).toFixed(2)}
                   </p>
                   <p className="text-xs text-default-500">
                     Stock: {book.stock}

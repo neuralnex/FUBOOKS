@@ -119,7 +119,7 @@ export default function BookDetailPage() {
               <div>
                 <span className="text-default-500">Price:</span>
                 <span className="text-primary font-bold text-2xl ml-2">
-                  ₦{book.price.toFixed(2)}
+                  ₦{Number(book.price).toFixed(2)}
                 </span>
               </div>
 

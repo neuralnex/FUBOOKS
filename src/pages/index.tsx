@@ -237,7 +237,7 @@ export default function IndexPage() {
                       {book.author}
                     </p>
                     <p className="text-primary font-bold">
-                      ₦{book.price.toFixed(2)}
+                      ₦{Number(book.price).toFixed(2)}
                     </p>
                   </div>
                 </Link>

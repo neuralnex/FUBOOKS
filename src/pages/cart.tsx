@@ -49,7 +49,7 @@ export default function CartPage() {
   };
 
   const totalAmount = cart.reduce(
-    (sum, item) => sum + item.book.price * item.quantity,
+    (sum, item) => sum + Number(item.book.price) * item.quantity,
     0,
   );
 
@@ -154,7 +154,7 @@ export default function CartPage() {
                     by {item.book.author}
                   </p>
                   <p className="text-primary font-bold mt-2">
-                    ₦{item.book.price.toFixed(2)}
+                    ₦{Number(item.book.price).toFixed(2)}
                   </p>
                 </div>
                 <div className="flex flex-col items-end gap-2">
@@ -181,7 +181,7 @@ export default function CartPage() {
                     </Button>
                   </div>
                   <p className="text-sm font-semibold">
-                    ₦{(item.book.price * item.quantity).toFixed(2)}
+                    ₦{(Number(item.book.price) * item.quantity).toFixed(2)}
                   </p>
                   <Button
                     color="danger"

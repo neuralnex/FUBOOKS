@@ -120,7 +120,7 @@ export default function BooksPage() {
                   </p>
                   <div className="flex items-center justify-between mt-auto">
                     <span className="text-primary font-bold text-lg">
-                      ₦{book.price.toFixed(2)}
+                      ₦{Number(book.price).toFixed(2)}
                     </span>
                     <span
                       className={`text-xs px-2 py-1 rounded ${

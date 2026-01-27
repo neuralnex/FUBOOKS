@@ -109,7 +109,7 @@ export default function OrdersPage() {
                   </div>
                   <div className="text-right">
                     <p className="text-primary font-bold text-xl">
-                      ₦{order.totalAmount.toFixed(2)}
+                      ₦{Number(order.totalAmount).toFixed(2)}
                     </p>
                     <p
                       className={`text-sm ${getPaymentStatusColor(order.paymentStatus)}`}
