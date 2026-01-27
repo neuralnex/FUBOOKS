@@ -37,7 +37,11 @@ export interface Book {
 }
 
 export type PaymentStatus = "paid" | "pending" | "failed";
-export type OrderStatus = "processing" | "purchased" | "delivering" | "delivered";
+export type OrderStatus =
+  | "processing"
+  | "purchased"
+  | "delivering"
+  | "delivered";
 
 export interface OrderItem {
   id: string;

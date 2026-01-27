@@ -42,17 +42,26 @@ export const Navbar = () => {
   const getCartItemCount = () => {
     if (typeof window === "undefined") return 0;
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
     return cart.reduce((sum: number, item: any) => sum + item.quantity, 0);
   };
 
   const navItems = isAuthenticated
     ? siteConfig.navItems
         .filter((item) => item.href !== "/login")
-        .filter((item) => (isAdmin ? item.href !== "/orders" && item.href !== "/cart" : true))
-    : siteConfig.navItems.filter((item) => item.href === "/" || item.href === "/books");
+        .filter((item) =>
+          isAdmin ? item.href !== "/orders" && item.href !== "/cart" : true,
+        )
+    : siteConfig.navItems.filter(
+        (item) => item.href === "/" || item.href === "/books",
+      );
 
   return (
-    <HeroUINavbar maxWidth="xl" position="sticky" onMenuOpenChange={setIsMenuOpen}>
+    <HeroUINavbar
+      maxWidth="xl"
+      position="sticky"
+      onMenuOpenChange={setIsMenuOpen}
+    >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand className="gap-3 max-w-fit">
           <Link
@@ -88,7 +97,7 @@ export const Navbar = () => {
         justify="end"
       >
         <NavbarItem className="hidden lg:flex">
-          <form onSubmit={handleSearch} className="w-full max-w-xs">
+          <form className="w-full max-w-xs" onSubmit={handleSearch}>
             <Input
               aria-label="Search books"
               classNames={{
@@ -96,12 +105,10 @@ export const Navbar = () => {
                 input: "text-sm",
               }}
               placeholder="Search books..."
+              startContent={<span className="text-default-400">🔍</span>}
+              type="search"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              startContent={
-                <span className="text-default-400">🔍</span>
-              }
-              type="search"
             />
           </form>
         </NavbarItem>
@@ -109,11 +116,11 @@ export const Navbar = () => {
         {!isAdmin && (
           <NavbarItem>
             <Button
+              isIconOnly
               as={RouterLink}
+              className="relative"
               to="/cart"
               variant="light"
-              isIconOnly
-              className="relative"
             >
               <span className="text-xl">🛒</span>
               {getCartItemCount() > 0 && (
@@ -132,13 +139,23 @@ export const Navbar = () => {
         {isAuthenticated ? (
           <>
             <NavbarItem>
-              <Link as={RouterLink} to="/profile" color="foreground" className="text-sm">
+              <Link
+                as={RouterLink}
+                className="text-sm"
+                color="foreground"
+                to="/profile"
+              >
                 {user?.name}
               </Link>
             </NavbarItem>
             {isAdmin && (
               <NavbarItem>
-                <Link as={RouterLink} to="/admin" color="primary" className="text-sm">
+                <Link
+                  as={RouterLink}
+                  className="text-sm"
+                  color="primary"
+                  to="/admin"
+                >
                   Admin
                 </Link>
               </NavbarItem>
@@ -146,8 +163,8 @@ export const Navbar = () => {
             <NavbarItem>
               <Button
                 color="danger"
-                variant="light"
                 size="sm"
+                variant="light"
                 onClick={handleLogout}
               >
                 Logout
@@ -160,9 +177,9 @@ export const Navbar = () => {
               <Button
                 as={RouterLink}
                 color="default"
+                size="sm"
                 to="/login"
                 variant="light"
-                size="sm"
               >
                 Login
               </Button>
@@ -171,9 +188,9 @@ export const Navbar = () => {
               <Button
                 as={RouterLink}
                 color="primary"
+                size="sm"
                 to="/register"
                 variant="solid"
-                size="sm"
               >
                 Sign Up
               </Button>
@@ -186,11 +203,11 @@ export const Navbar = () => {
         {!isAdmin && (
           <NavbarItem>
             <Button
+              isIconOnly
               as={RouterLink}
+              className="relative"
               to="/cart"
               variant="light"
-              isIconOnly
-              className="relative"
             >
               <span className="text-xl">🛒</span>
               {getCartItemCount() > 0 && (
@@ -210,10 +227,10 @@ export const Navbar = () => {
           <form onSubmit={handleSearch}>
             <Input
               placeholder="Search books..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
               startContent={<span className="text-default-400">🔍</span>}
               type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </form>
         </div>
@@ -221,12 +238,7 @@ export const Navbar = () => {
         <div className="mx-4 mt-2 flex flex-col gap-2">
           {navItems.map((item, index) => (
             <NavbarMenuItem key={`${item.href}-${index}`}>
-              <Link
-                as={RouterLink}
-                color="foreground"
-                to={item.href}
-                size="lg"
-              >
+              <Link as={RouterLink} color="foreground" size="lg" to={item.href}>
                 {item.label}
               </Link>
             </NavbarMenuItem>
@@ -235,30 +247,30 @@ export const Navbar = () => {
             <>
               {!isAdmin && (
                 <NavbarMenuItem>
-                  <Link as={RouterLink} to="/cart" color="foreground" size="lg">
+                  <Link as={RouterLink} color="foreground" size="lg" to="/cart">
                     Cart {getCartItemCount() > 0 && `(${getCartItemCount()})`}
                   </Link>
                 </NavbarMenuItem>
               )}
               <NavbarMenuItem>
-                <Link as={RouterLink} to="/profile" color="foreground" size="lg">
+                <Link
+                  as={RouterLink}
+                  color="foreground"
+                  size="lg"
+                  to="/profile"
+                >
                   Profile
                 </Link>
               </NavbarMenuItem>
               {isAdmin && (
                 <NavbarMenuItem>
-                  <Link as={RouterLink} to="/admin" color="primary" size="lg">
+                  <Link as={RouterLink} color="primary" size="lg" to="/admin">
                     Admin Panel
                   </Link>
                 </NavbarMenuItem>
               )}
               <NavbarMenuItem>
-                <Link
-                  color="danger"
-                  href="#"
-                  size="lg"
-                  onClick={handleLogout}
-                >
+                <Link color="danger" href="#" size="lg" onClick={handleLogout}>
                   Logout
                 </Link>
               </NavbarMenuItem>

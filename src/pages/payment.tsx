@@ -1,9 +1,11 @@
+import type { Order } from "@/types";
+
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@heroui/button";
+
 import { apiService } from "@/services/api";
 import { useAuth } from "@/contexts/AuthContext";
-import type { Order } from "@/types";
 import DefaultLayout from "@/layouts/default";
 import { title } from "@/components/primitives";
 
@@ -18,6 +20,7 @@ export default function PaymentPage() {
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/login");
+
       return;
     }
     if (id) {
@@ -28,9 +31,10 @@ export default function PaymentPage() {
   const loadOrder = async () => {
     try {
       const data = await apiService.getOrderById(id!);
+
       setOrder(data);
-    } catch (error) {
-      console.error("Failed to load order:", error);
+    } catch {
+      alert("Failed to load order");
     } finally {
       setLoading(false);
     }
@@ -42,6 +46,7 @@ export default function PaymentPage() {
     setProcessing(true);
     try {
       const response = await apiService.initiateCashierPayment(order.id);
+
       if (response.cashierUrl) {
         window.location.href = response.cashierUrl;
       } else {
@@ -85,7 +90,7 @@ export default function PaymentPage() {
             <p className="text-default-600 mt-4 mb-8">
               Your order has been paid successfully.
             </p>
-            <Button onClick={() => navigate("/orders")} color="primary">
+            <Button color="primary" onClick={() => navigate("/orders")}>
               View Orders
             </Button>
           </div>
@@ -122,11 +127,11 @@ export default function PaymentPage() {
               Click the button below to proceed with OPay payment
             </p>
             <Button
-              color="primary"
-              size="lg"
               className="w-full"
-              onClick={handleCashierPayment}
+              color="primary"
               isLoading={processing}
+              size="lg"
+              onClick={handleCashierPayment}
             >
               {processing ? "Processing..." : "Pay with OPay"}
             </Button>
@@ -136,4 +141,3 @@ export default function PaymentPage() {
     </DefaultLayout>
   );
 }
-

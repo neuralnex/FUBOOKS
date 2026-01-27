@@ -11,7 +11,8 @@ export default defineConfig({
     host: true,
     proxy: {
       "/api": {
-        target: process.env.VITE_API_URL || "https://bookmate-n9wh.onrender.com",
+        target:
+          process.env.VITE_API_URL || "https://bookmate-n9wh.onrender.com",
         changeOrigin: true,
         secure: true,
       },

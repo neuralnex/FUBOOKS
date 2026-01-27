@@ -1,9 +1,11 @@
+import type { Order, Book } from "@/types";
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@heroui/button";
+
 import { apiService } from "@/services/api";
 import { useAuth } from "@/contexts/AuthContext";
-import type { Order, Book } from "@/types";
 import DefaultLayout from "@/layouts/default";
 import { title } from "@/components/primitives";
 
@@ -18,6 +20,7 @@ export default function AdminPage() {
   useEffect(() => {
     if (!isAuthenticated || !isAdmin) {
       navigate("/dashboard");
+
       return;
     }
     loadData();
@@ -29,10 +32,11 @@ export default function AdminPage() {
         apiService.getAdminOrders(),
         apiService.getBooks(),
       ]);
+
       setOrders(ordersData);
       setBooks(booksData);
-    } catch (error) {
-      console.error("Failed to load data:", error);
+    } catch {
+      alert("Failed to load admin data");
     } finally {
       setLoading(false);
     }
@@ -58,15 +62,15 @@ export default function AdminPage() {
 
         <div className="flex gap-4 mb-6 mt-6">
           <Button
-            variant={activeTab === "orders" ? "solid" : "bordered"}
             color={activeTab === "orders" ? "primary" : "default"}
+            variant={activeTab === "orders" ? "solid" : "bordered"}
             onClick={() => setActiveTab("orders")}
           >
             Orders ({orders.length})
           </Button>
           <Button
-            variant={activeTab === "books" ? "solid" : "bordered"}
             color={activeTab === "books" ? "primary" : "default"}
+            variant={activeTab === "books" ? "solid" : "bordered"}
             onClick={() => setActiveTab("books")}
           >
             Books ({books.length})
@@ -80,10 +84,15 @@ export default function AdminPage() {
         ) : activeTab === "orders" ? (
           <div className="space-y-4">
             {orders.map((order) => (
-              <div key={order.id} className="bg-content1 rounded-lg p-6 shadow-md">
+              <div
+                key={order.id}
+                className="bg-content1 rounded-lg p-6 shadow-md"
+              >
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="font-semibold">Order #{order.id.slice(0, 8)}</h3>
+                    <h3 className="font-semibold">
+                      Order #{order.id.slice(0, 8)}
+                    </h3>
                     <p className="text-sm text-default-500">
                       Student: {order.student?.name} ({order.student?.email})
                     </p>
@@ -108,9 +117,11 @@ export default function AdminPage() {
 
                 <div className="flex gap-2">
                   <select
-                    value={order.orderStatus}
-                    onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
                     className="px-3 py-2 rounded-lg border border-default-200 bg-background"
+                    value={order.orderStatus}
+                    onChange={(e) =>
+                      handleStatusUpdate(order.id, e.target.value)
+                    }
                   >
                     <option value="processing">Processing</option>
                     <option value="purchased">Purchased</option>
@@ -123,23 +134,34 @@ export default function AdminPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            <Button onClick={() => navigate("/admin/books/new")} color="primary" className="mb-4">
+            <Button
+              className="mb-4"
+              color="primary"
+              onClick={() => navigate("/admin/books/new")}
+            >
               Add New Book
             </Button>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {books.map((book) => (
-                <div key={book.id} className="bg-content1 rounded-lg p-4 shadow-md">
+                <div
+                  key={book.id}
+                  className="bg-content1 rounded-lg p-4 shadow-md"
+                >
                   {book.coverImage && (
                     <img
-                      src={`data:image/jpeg;base64,${book.coverImage}`}
                       alt={book.title}
                       className="w-full h-32 object-cover rounded mb-2"
+                      src={`data:image/jpeg;base64,${book.coverImage}`}
                     />
                   )}
                   <h3 className="font-semibold">{book.title}</h3>
                   <p className="text-sm text-default-600">{book.author}</p>
-                  <p className="text-primary font-bold">₦{book.price.toFixed(2)}</p>
-                  <p className="text-xs text-default-500">Stock: {book.stock}</p>
+                  <p className="text-primary font-bold">
+                    ₦{book.price.toFixed(2)}
+                  </p>
+                  <p className="text-xs text-default-500">
+                    Stock: {book.stock}
+                  </p>
                   <div className="flex gap-2 mt-2">
                     <Button
                       size="sm"
@@ -149,15 +171,17 @@ export default function AdminPage() {
                       Edit
                     </Button>
                     <Button
-                      size="sm"
                       color="danger"
+                      size="sm"
                       variant="light"
                       onClick={async () => {
-                        if (confirm("Are you sure you want to delete this book?")) {
+                        if (
+                          confirm("Are you sure you want to delete this book?")
+                        ) {
                           try {
                             await apiService.deleteBook(book.id);
                             loadData();
-                          } catch (error) {
+                          } catch {
                             alert("Failed to delete book");
                           }
                         }
@@ -175,4 +199,3 @@ export default function AdminPage() {
     </DefaultLayout>
   );
 }
-

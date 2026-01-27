@@ -29,7 +29,7 @@ function App() {
       <Route element={<AdminPage />} path="/admin" />
       <Route element={<AdminBookFormPage />} path="/admin/books/new" />
       <Route element={<AdminBookFormPage />} path="/admin/books/:id/edit" />
-      <Route element={<Navigate to="/" replace />} path="*" />
+      <Route element={<Navigate replace to="/" />} path="*" />
     </Routes>
   );
 }

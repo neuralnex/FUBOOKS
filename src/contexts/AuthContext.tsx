@@ -1,6 +1,14 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { apiService } from "@/services/api";
 import type { User, AuthResponse } from "@/types";
+
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+
+import { apiService } from "@/services/api";
 
 interface AuthContextType {
   user: User | null;
@@ -38,7 +46,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (emailOrRegNumber: string, password: string) => {
-    const response: AuthResponse = await apiService.login(emailOrRegNumber, password);
+    const response: AuthResponse = await apiService.login(
+      emailOrRegNumber,
+      password,
+    );
+
     setToken(response.token);
     setUser(response.user);
     localStorage.setItem("token", response.token);
@@ -53,6 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     accommodation: string;
   }) => {
     const response: AuthResponse = await apiService.register(data);
+
     setToken(response.token);
     setUser(response.user);
     localStorage.setItem("token", response.token);
@@ -82,9 +95,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
+
   if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
+
   return context;
 }
-

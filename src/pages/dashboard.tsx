@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@heroui/button";
+
 import { useAuth } from "@/contexts/AuthContext";
 import DefaultLayout from "@/layouts/default";
 import { title, subtitle } from "@/components/primitives";
@@ -35,7 +36,7 @@ export default function DashboardPage() {
             <p className="text-default-600 text-sm mb-4">
               Explore our collection of textbooks and materials
             </p>
-            <Button as={Link} to="/books" color="primary" className="w-full">
+            <Button as={Link} className="w-full" color="primary" to="/books">
               View Books
             </Button>
           </div>
@@ -45,7 +46,13 @@ export default function DashboardPage() {
             <p className="text-default-600 text-sm mb-4">
               Track and manage your book orders
             </p>
-            <Button as={Link} to="/orders" color="primary" variant="bordered" className="w-full">
+            <Button
+              as={Link}
+              className="w-full"
+              color="primary"
+              to="/orders"
+              variant="bordered"
+            >
               View Orders
             </Button>
           </div>
@@ -56,9 +63,15 @@ export default function DashboardPage() {
               <p className="text-default-600 text-sm mb-4">
                 Manage books, orders, and system settings
               </p>
-              <Button as={Link} to="/admin" color="primary" variant="bordered" className="w-full">
-              Go to Admin
-            </Button>
+              <Button
+                as={Link}
+                className="w-full"
+                color="primary"
+                to="/admin"
+                variant="bordered"
+              >
+                Go to Admin
+              </Button>
             </div>
           )}
 
@@ -67,7 +80,13 @@ export default function DashboardPage() {
             <p className="text-default-600 text-sm mb-4">
               View and update your account information
             </p>
-            <Button as={Link} to="/profile" color="primary" variant="bordered" className="w-full">
+            <Button
+              as={Link}
+              className="w-full"
+              color="primary"
+              to="/profile"
+              variant="bordered"
+            >
               View Profile
             </Button>
           </div>
@@ -104,4 +123,3 @@ export default function DashboardPage() {
     </DefaultLayout>
   );
 }
-

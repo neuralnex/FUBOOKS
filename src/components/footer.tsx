@@ -8,7 +8,9 @@ export const Footer = () => {
           <div>
             <h3 className="font-semibold text-lg mb-4">About FUBOOKS</h3>
             <p className="text-sm text-default-600 mb-4">
-              Your trusted book ordering platform for students. We provide textbooks, manuals, guides, and past papers with fast delivery and secure payments.
+              Your trusted book ordering platform for students. We provide
+              textbooks, manuals, guides, and past papers with fast delivery and
+              secure payments.
             </p>
           </div>
 
@@ -16,22 +18,22 @@ export const Footer = () => {
             <h3 className="font-semibold text-lg mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/books" color="foreground" className="text-sm">
+                <Link className="text-sm" color="foreground" href="/books">
                   Browse Books
                 </Link>
               </li>
               <li>
-                <Link href="/books" color="foreground" className="text-sm">
+                <Link className="text-sm" color="foreground" href="/books">
                   Categories
                 </Link>
               </li>
               <li>
-                <Link href="/orders" color="foreground" className="text-sm">
+                <Link className="text-sm" color="foreground" href="/orders">
                   My Orders
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard" color="foreground" className="text-sm">
+                <Link className="text-sm" color="foreground" href="/dashboard">
                   Dashboard
                 </Link>
               </li>
@@ -42,22 +44,22 @@ export const Footer = () => {
             <h3 className="font-semibold text-lg mb-4">Customer Service</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/about" color="foreground" className="text-sm">
+                <Link className="text-sm" color="foreground" href="/about">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/contact" color="foreground" className="text-sm">
+                <Link className="text-sm" color="foreground" href="/contact">
                   Contact Us
                 </Link>
               </li>
               <li>
-                <Link href="/faq" color="foreground" className="text-sm">
+                <Link className="text-sm" color="foreground" href="/faq">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link href="/shipping" color="foreground" className="text-sm">
+                <Link className="text-sm" color="foreground" href="/shipping">
                   Shipping Info
                 </Link>
               </li>
@@ -75,13 +77,25 @@ export const Footer = () => {
               </p>
             </div>
             <div className="flex gap-3">
-              <Link href="#" color="foreground" className="text-default-500 hover:text-primary">
+              <Link
+                className="text-default-500 hover:text-primary"
+                color="foreground"
+                href="#"
+              >
                 <span className="text-xl">📘</span>
               </Link>
-              <Link href="#" color="foreground" className="text-default-500 hover:text-primary">
+              <Link
+                className="text-default-500 hover:text-primary"
+                color="foreground"
+                href="#"
+              >
                 <span className="text-xl">🐦</span>
               </Link>
-              <Link href="#" color="foreground" className="text-default-500 hover:text-primary">
+              <Link
+                className="text-default-500 hover:text-primary"
+                color="foreground"
+                href="#"
+              >
                 <span className="text-xl">📷</span>
               </Link>
             </div>
@@ -93,10 +107,18 @@ export const Footer = () => {
             © {new Date().getFullYear()} FUBOOKS. All rights reserved.
           </p>
           <div className="flex gap-4 mt-4 md:mt-0">
-            <Link href="/privacy" color="foreground" className="text-sm text-default-500">
+            <Link
+              className="text-sm text-default-500"
+              color="foreground"
+              href="/privacy"
+            >
               Privacy Policy
             </Link>
-            <Link href="/terms" color="foreground" className="text-sm text-default-500">
+            <Link
+              className="text-sm text-default-500"
+              color="foreground"
+              href="/terms"
+            >
               Terms of Service
             </Link>
           </div>
@@ -105,4 +127,3 @@ export const Footer = () => {
     </footer>
   );
 };
-

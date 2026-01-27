@@ -1,9 +1,11 @@
+import type { Book } from "@/types";
+
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@heroui/button";
+
 import { apiService } from "@/services/api";
 import { useAuth } from "@/contexts/AuthContext";
-import type { Book } from "@/types";
 import DefaultLayout from "@/layouts/default";
 import { title } from "@/components/primitives";
 
@@ -25,9 +27,10 @@ export default function BookDetailPage() {
   const loadBook = async () => {
     try {
       const data = await apiService.getBookById(id!);
+
       setBook(data);
-    } catch (error) {
-      console.error("Failed to load book:", error);
+    } catch {
+      alert("Failed to load book");
     } finally {
       setLoading(false);
     }
@@ -36,11 +39,14 @@ export default function BookDetailPage() {
   const handleAddToCart = () => {
     if (!isAuthenticated) {
       navigate("/login");
+
       return;
     }
 
     const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    const existingItem = existingCart.find((item: any) => item.book.id === book?.id);
+    const existingItem = existingCart.find(
+      (item: any) => item.book.id === book?.id,
+    );
 
     if (existingItem) {
       existingItem.quantity += quantity;
@@ -71,7 +77,7 @@ export default function BookDetailPage() {
       <DefaultLayout>
         <div className="text-center py-12">
           <p className="text-default-500 text-lg">Book not found</p>
-          <Button onClick={() => navigate("/books")} className="mt-4">
+          <Button className="mt-4" onClick={() => navigate("/books")}>
             Back to Books
           </Button>
         </div>
@@ -82,7 +88,11 @@ export default function BookDetailPage() {
   return (
     <DefaultLayout>
       <div className="py-8">
-        <Button onClick={() => navigate("/books")} variant="light" className="mb-4">
+        <Button
+          className="mb-4"
+          variant="light"
+          onClick={() => navigate("/books")}
+        >
           ← Back to Books
         </Button>
 
@@ -90,9 +100,9 @@ export default function BookDetailPage() {
           <div>
             {book.coverImage ? (
               <img
-                src={`data:image/jpeg;base64,${book.coverImage}`}
                 alt={book.title}
                 className="w-full rounded-lg shadow-lg"
+                src={`data:image/jpeg;base64,${book.coverImage}`}
               />
             ) : (
               <div className="w-full h-96 bg-default-200 rounded-lg flex items-center justify-center">
@@ -108,7 +118,9 @@ export default function BookDetailPage() {
             <div className="mt-6 space-y-4">
               <div>
                 <span className="text-default-500">Price:</span>
-                <span className="text-primary font-bold text-2xl ml-2">₦{book.price.toFixed(2)}</span>
+                <span className="text-primary font-bold text-2xl ml-2">
+                  ₦{book.price.toFixed(2)}
+                </span>
               </div>
 
               <div>
@@ -125,9 +137,11 @@ export default function BookDetailPage() {
 
               <div>
                 <span className="text-default-500">Stock:</span>
-                <span className={`ml-2 font-semibold ${
-                  book.stock > 0 ? "text-success" : "text-danger"
-                }`}>
+                <span
+                  className={`ml-2 font-semibold ${
+                    book.stock > 0 ? "text-success" : "text-danger"
+                  }`}
+                >
                   {book.stock > 0 ? `${book.stock} available` : "Out of Stock"}
                 </span>
               </div>
@@ -149,7 +163,9 @@ export default function BookDetailPage() {
                     <Button
                       size="sm"
                       variant="bordered"
-                      onClick={() => setQuantity(Math.min(book.stock, quantity + 1))}
+                      onClick={() =>
+                        setQuantity(Math.min(book.stock, quantity + 1))
+                      }
                     >
                       +
                     </Button>
@@ -157,12 +173,12 @@ export default function BookDetailPage() {
                 </div>
 
                 <Button
-                  color="primary"
-                  size="lg"
                   className="w-full"
-                  onClick={handleAddToCart}
-                  isLoading={addingToCart}
+                  color="primary"
                   isDisabled={quantity > book.stock}
+                  isLoading={addingToCart}
+                  size="lg"
+                  onClick={handleAddToCart}
                 >
                   {addingToCart ? "Adding..." : "Add to Cart"}
                 </Button>
@@ -174,4 +190,3 @@ export default function BookDetailPage() {
     </DefaultLayout>
   );
 }
-

@@ -1,10 +1,12 @@
+import type { CartItem } from "@/types";
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
+
 import { useAuth } from "@/contexts/AuthContext";
 import { apiService } from "@/services/api";
-import type { CartItem } from "@/types";
 import DefaultLayout from "@/layouts/default";
 import { title } from "@/components/primitives";
 
@@ -21,45 +23,54 @@ export default function CartPage() {
 
   const loadCart = () => {
     const savedCart = JSON.parse(localStorage.getItem("cart") || "[]");
+
     setCart(savedCart);
   };
 
   const updateQuantity = (bookId: string, newQuantity: number) => {
     if (newQuantity <= 0) {
       removeItem(bookId);
+
       return;
     }
     const updatedCart = cart.map((item) =>
-      item.book.id === bookId ? { ...item, quantity: newQuantity } : item
+      item.book.id === bookId ? { ...item, quantity: newQuantity } : item,
     );
+
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   const removeItem = (bookId: string) => {
     const updatedCart = cart.filter((item) => item.book.id !== bookId);
+
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
   const totalAmount = cart.reduce(
     (sum, item) => sum + item.book.price * item.quantity,
-    0
+    0,
   );
 
   const handleCheckout = async () => {
     if (!isAuthenticated) {
       navigate("/login");
+
       return;
     }
 
     if (isAdmin) {
-      alert("Admin accounts cannot place orders. Use a student account to checkout.");
+      alert(
+        "Admin accounts cannot place orders. Use a student account to checkout.",
+      );
+
       return;
     }
 
     if (!deliveryAddress || deliveryAddress.length < 10) {
       alert("Please enter a valid delivery address (at least 10 characters)");
+
       return;
     }
 
@@ -93,7 +104,7 @@ export default function CartPage() {
             <p className="text-default-500 text-lg mb-4">
               Admin accounts are for operations only and cannot place orders.
             </p>
-            <Button onClick={() => navigate("/admin")} color="primary">
+            <Button color="primary" onClick={() => navigate("/admin")}>
               Go to Admin Panel
             </Button>
           </div>
@@ -109,7 +120,7 @@ export default function CartPage() {
           <h1 className={title()}>Shopping Cart</h1>
           <div className="text-center py-12">
             <p className="text-default-500 text-lg mb-4">Your cart is empty</p>
-            <Button onClick={() => navigate("/books")} color="primary">
+            <Button color="primary" onClick={() => navigate("/books")}>
               Browse Books
             </Button>
           </div>
@@ -132,31 +143,39 @@ export default function CartPage() {
               >
                 {item.book.coverImage && (
                   <img
-                    src={`data:image/jpeg;base64,${item.book.coverImage}`}
                     alt={item.book.title}
                     className="w-24 h-24 object-cover rounded"
+                    src={`data:image/jpeg;base64,${item.book.coverImage}`}
                   />
                 )}
                 <div className="flex-1">
                   <h3 className="font-semibold">{item.book.title}</h3>
-                  <p className="text-sm text-default-600">by {item.book.author}</p>
-                  <p className="text-primary font-bold mt-2">₦{item.book.price.toFixed(2)}</p>
+                  <p className="text-sm text-default-600">
+                    by {item.book.author}
+                  </p>
+                  <p className="text-primary font-bold mt-2">
+                    ₦{item.book.price.toFixed(2)}
+                  </p>
                 </div>
                 <div className="flex flex-col items-end gap-2">
                   <div className="flex items-center gap-2">
                     <Button
                       size="sm"
                       variant="bordered"
-                      onClick={() => updateQuantity(item.book.id, item.quantity - 1)}
+                      onClick={() =>
+                        updateQuantity(item.book.id, item.quantity - 1)
+                      }
                     >
                       -
                     </Button>
                     <span className="w-12 text-center">{item.quantity}</span>
                     <Button
+                      isDisabled={item.quantity >= item.book.stock}
                       size="sm"
                       variant="bordered"
-                      onClick={() => updateQuantity(item.book.id, item.quantity + 1)}
-                      isDisabled={item.quantity >= item.book.stock}
+                      onClick={() =>
+                        updateQuantity(item.book.id, item.quantity + 1)
+                      }
                     >
                       +
                     </Button>
@@ -165,8 +184,8 @@ export default function CartPage() {
                     ₦{(item.book.price * item.quantity).toFixed(2)}
                   </p>
                   <Button
-                    size="sm"
                     color="danger"
+                    size="sm"
                     variant="light"
                     onClick={() => removeItem(item.book.id)}
                   >
@@ -180,15 +199,15 @@ export default function CartPage() {
           <div className="lg:col-span-1">
             <div className="bg-content1 rounded-lg p-6 shadow-md sticky top-4">
               <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-              
+
               <Input
+                className="mb-4"
+                description="Minimum 10 characters"
                 label="Delivery Address"
                 placeholder="Enter your delivery address"
                 value={deliveryAddress}
-                onChange={(e) => setDeliveryAddress(e.target.value)}
                 variant="bordered"
-                className="mb-4"
-                description="Minimum 10 characters"
+                onChange={(e) => setDeliveryAddress(e.target.value)}
               />
 
               <div className="space-y-2 mb-4">
@@ -198,7 +217,9 @@ export default function CartPage() {
                 </div>
                 <div className="flex justify-between font-bold text-lg pt-2 border-t">
                   <span>Total:</span>
-                  <span className="text-primary">₦{totalAmount.toFixed(2)}</span>
+                  <span className="text-primary">
+                    ₦{totalAmount.toFixed(2)}
+                  </span>
                 </div>
               </div>
 
@@ -208,9 +229,9 @@ export default function CartPage() {
                     Please login to proceed with checkout
                   </p>
                   <Button
+                    className="w-full"
                     color="primary"
                     size="lg"
-                    className="w-full"
                     onClick={() => navigate("/login")}
                   >
                     Login to Checkout
@@ -218,11 +239,11 @@ export default function CartPage() {
                 </div>
               ) : (
                 <Button
-                  color="primary"
-                  size="lg"
                   className="w-full"
-                  onClick={handleCheckout}
+                  color="primary"
                   isLoading={loading}
+                  size="lg"
+                  onClick={handleCheckout}
                 >
                   Proceed to Checkout
                 </Button>
@@ -234,4 +255,3 @@ export default function CartPage() {
     </DefaultLayout>
   );
 }
-

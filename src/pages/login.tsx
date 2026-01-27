@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
+
 import { useAuth } from "@/contexts/AuthContext";
 import DefaultLayout from "@/layouts/default";
 import { title } from "@/components/primitives";
@@ -23,7 +24,10 @@ export default function LoginPage() {
       await login(emailOrRegNumber, password);
       navigate("/dashboard");
     } catch (err: any) {
-      setError(err.response?.data?.message || "Login failed. Please check your credentials.");
+      setError(
+        err.response?.data?.message ||
+          "Login failed. Please check your credentials.",
+      );
     } finally {
       setLoading(false);
     }
@@ -35,48 +39,50 @@ export default function LoginPage() {
         <div className="w-full max-w-md bg-content1 rounded-lg shadow-lg p-6">
           <div className="flex flex-col gap-1 mb-6">
             <h1 className={title({ size: "md" })}>Login to FUBOOKS</h1>
-            <p className="text-small text-default-500">Enter your credentials to access your account</p>
+            <p className="text-small text-default-500">
+              Enter your credentials to access your account
+            </p>
           </div>
           <div>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
               {error && (
                 <div className="p-3 rounded-lg bg-danger-50 text-danger text-sm">
                   {error}
                 </div>
               )}
-              
+
               <Input
+                required
                 label="Email or Registration Number"
                 placeholder="Enter your email or registration number"
                 value={emailOrRegNumber}
+                variant="bordered"
                 onChange={(e) => setEmailOrRegNumber(e.target.value)}
-                required
-                variant="bordered"
               />
-              
+
               <Input
-                label="Password"
-                type="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 required
+                label="Password"
+                placeholder="Enter your password"
+                type="password"
+                value={password}
                 variant="bordered"
+                onChange={(e) => setPassword(e.target.value)}
               />
-              
+
               <Button
-                type="submit"
-                color="primary"
-                size="lg"
-                isLoading={loading}
                 className="w-full"
+                color="primary"
+                isLoading={loading}
+                size="lg"
+                type="submit"
               >
                 Login
               </Button>
-              
+
               <div className="text-center text-small">
-                <span>Don't have an account? </span>
-                <Link to="/register" className="text-primary hover:underline">
+                <span>Don&apos;t have an account? </span>
+                <Link className="text-primary hover:underline" to="/register">
                   Register here
                 </Link>
               </div>
@@ -87,4 +93,3 @@ export default function LoginPage() {
     </DefaultLayout>
   );
 }
-

@@ -16,4 +16,3 @@ export const API_ENDPOINTS = {
   adminOrders: "/admin/orders",
   adminOrderStatus: (id: string) => `/admin/orders/${id}/status`,
 };
-

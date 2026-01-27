@@ -1,12 +1,14 @@
+import type { Book, BookCategory } from "@/types";
+
 import { useEffect, useState, ChangeEvent, FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
+
 import DefaultLayout from "@/layouts/default";
 import { title } from "@/components/primitives";
 import { apiService } from "@/services/api";
 import { useAuth } from "@/contexts/AuthContext";
-import type { Book, BookCategory } from "@/types";
 
 export default function AdminBookFormPage() {
   const { id } = useParams<{ id: string }>();
@@ -38,6 +40,7 @@ export default function AdminBookFormPage() {
   useEffect(() => {
     if (!isAuthenticated || !isAdmin) {
       navigate("/dashboard");
+
       return;
     }
 
@@ -51,6 +54,7 @@ export default function AdminBookFormPage() {
   const loadBook = async (bookId: string) => {
     try {
       const book: Book = await apiService.getBookById(bookId);
+
       setFormState({
         title: book.title,
         author: book.author,
@@ -68,11 +72,13 @@ export default function AdminBookFormPage() {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
     setFormState((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
+
     setCoverFile(file);
   };
 
@@ -83,6 +89,7 @@ export default function AdminBookFormPage() {
 
     try {
       const formData = new FormData();
+
       formData.append("title", formState.title);
       formData.append("author", formState.author);
       formData.append("price", formState.price);
@@ -128,52 +135,65 @@ export default function AdminBookFormPage() {
   return (
     <DefaultLayout>
       <div className="py-8 max-w-2xl mx-auto">
-        <Button variant="light" className="mb-4" onClick={() => navigate("/admin")}>
+        <Button
+          className="mb-4"
+          variant="light"
+          onClick={() => navigate("/admin")}
+        >
           ← Back to Admin
         </Button>
 
         <h1 className={title()}>{isEdit ? "Edit Book" : "Add New Book"}</h1>
 
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && <p className="text-danger text-sm">{error}</p>}
 
           <Input
+            required
             label="Title"
             name="title"
             value={formState.title}
             onChange={handleChange}
-            required
           />
 
           <Input
+            required
             label="Author"
             name="author"
             value={formState.author}
             onChange={handleChange}
-            required
           />
 
           <Input
-            type="number"
+            required
             label="Price (₦)"
+            min={0}
             name="price"
+            step="0.01"
+            type="number"
             value={formState.price}
             onChange={handleChange}
-            required
-            min={0}
-            step="0.01"
           />
 
           <div className="space-y-1">
-            <label className="text-sm font-medium text-foreground">Category</label>
+            <label
+              className="text-sm font-medium text-foreground"
+              htmlFor="category"
+            >
+              Category
+            </label>
             <select
+              required
+              className="w-full px-3 py-2 rounded-md border border-default-200 bg-background text-foreground"
+              id="category"
               name="category"
               value={formState.category}
               onChange={(e) =>
-                setFormState((prev) => ({ ...prev, category: e.target.value as BookCategory | "" }))
+                setFormState((prev) => ({
+                  ...prev,
+                  category: e.target.value as BookCategory | "",
+                }))
               }
-              required
-              className="w-full px-3 py-2 rounded-md border border-default-200 bg-background text-foreground"
             >
               <option value="">Select category</option>
               <option value="Textbook">Textbook</option>
@@ -191,36 +211,42 @@ export default function AdminBookFormPage() {
           />
 
           <Input
-            type="number"
+            required
             label="Stock"
+            min={0}
             name="stock"
+            step="1"
+            type="number"
             value={formState.stock}
             onChange={handleChange}
-            required
-            min={0}
-            step="1"
           />
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Cover Image</label>
+            <label
+              className="text-sm font-medium text-foreground"
+              htmlFor="coverImage"
+            >
+              Cover Image
+            </label>
             <input
-              type="file"
               accept="image/*"
-              onChange={handleFileChange}
               className="block w-full text-sm text-default-500
                 file:mr-4 file:py-2 file:px-4
                 file:rounded-md file:border-0
                 file:text-sm file:font-semibold
                 file:bg-primary file:text-primary-foreground
                 hover:file:bg-primary/80"
+              id="coverImage"
+              type="file"
+              onChange={handleFileChange}
             />
           </div>
 
           <Button
-            type="submit"
-            color="primary"
             className="w-full"
+            color="primary"
             isLoading={loading}
+            type="submit"
           >
             {isEdit ? "Save Changes" : "Create Book"}
           </Button>
@@ -229,5 +255,3 @@ export default function AdminBookFormPage() {
     </DefaultLayout>
   );
 }
-
-

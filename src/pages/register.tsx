@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
+
 import { useAuth } from "@/contexts/AuthContext";
 import DefaultLayout from "@/layouts/default";
 import { title } from "@/components/primitives";
@@ -30,11 +31,13 @@ export default function RegisterPage() {
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
+
       return;
     }
 
     if (formData.regNumber.length !== 11 || !/^\d+$/.test(formData.regNumber)) {
       setError("Registration number must be exactly 11 digits");
+
       return;
     }
 
@@ -50,7 +53,9 @@ export default function RegisterPage() {
       });
       navigate("/dashboard");
     } catch (err: any) {
-      setError(err.response?.data?.message || "Registration failed. Please try again.");
+      setError(
+        err.response?.data?.message || "Registration failed. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
@@ -62,88 +67,92 @@ export default function RegisterPage() {
         <div className="w-full max-w-md bg-content1 rounded-lg shadow-lg p-6">
           <div className="flex flex-col gap-1 mb-6">
             <h1 className={title({ size: "md" })}>Create Account</h1>
-            <p className="text-small text-default-500">Join FUBOOKS to order your books</p>
+            <p className="text-small text-default-500">
+              Join FUBOOKS to order your books
+            </p>
           </div>
           <div>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
               {error && (
                 <div className="p-3 rounded-lg bg-danger-50 text-danger text-sm">
                   {error}
                 </div>
               )}
-              
+
               <Input
+                required
                 label="Full Name"
                 placeholder="Enter your full name"
                 value={formData.name}
+                variant="bordered"
                 onChange={(e) => handleChange("name", e.target.value)}
-                required
-                variant="bordered"
               />
-              
+
               <Input
+                required
                 label="Email"
-                type="email"
                 placeholder="Enter your email"
+                type="email"
                 value={formData.email}
-                onChange={(e) => handleChange("email", e.target.value)}
-                required
                 variant="bordered"
+                onChange={(e) => handleChange("email", e.target.value)}
               />
-              
+
               <Input
+                required
+                description="Must be exactly 11 digits"
                 label="Registration Number"
+                maxLength={11}
                 placeholder="Enter 11-digit registration number"
                 value={formData.regNumber}
-                onChange={(e) => handleChange("regNumber", e.target.value)}
-                maxLength={11}
-                required
                 variant="bordered"
-                description="Must be exactly 11 digits"
+                onChange={(e) => handleChange("regNumber", e.target.value)}
               />
-              
+
               <Input
+                required
                 label="Accommodation Address"
                 placeholder="Enter your accommodation address"
                 value={formData.accommodation}
+                variant="bordered"
                 onChange={(e) => handleChange("accommodation", e.target.value)}
-                required
-                variant="bordered"
               />
-              
+
               <Input
+                required
                 label="Password"
-                type="password"
                 placeholder="Enter your password"
-                value={formData.password}
-                onChange={(e) => handleChange("password", e.target.value)}
-                required
-                variant="bordered"
-              />
-              
-              <Input
-                label="Confirm Password"
                 type="password"
-                placeholder="Confirm your password"
-                value={formData.confirmPassword}
-                onChange={(e) => handleChange("confirmPassword", e.target.value)}
-                required
+                value={formData.password}
                 variant="bordered"
+                onChange={(e) => handleChange("password", e.target.value)}
               />
-              
+
+              <Input
+                required
+                label="Confirm Password"
+                placeholder="Confirm your password"
+                type="password"
+                value={formData.confirmPassword}
+                variant="bordered"
+                onChange={(e) =>
+                  handleChange("confirmPassword", e.target.value)
+                }
+              />
+
               <Button
-                type="submit"
-                color="primary"
-                size="lg"
-                isLoading={loading}
                 className="w-full"
+                color="primary"
+                isLoading={loading}
+                size="lg"
+                type="submit"
               >
                 Register
               </Button>
-              
+
               <div className="text-center text-small">
                 <span>Already have an account? </span>
-                <Link to="/login" className="text-primary hover:underline">
+                <Link className="text-primary hover:underline" to="/login">
                   Login here
                 </Link>
               </div>
@@ -154,4 +163,3 @@ export default function RegisterPage() {
     </DefaultLayout>
   );
 }
-

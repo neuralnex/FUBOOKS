@@ -1,9 +1,11 @@
+import type { Order } from "@/types";
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@heroui/button";
+
 import { apiService } from "@/services/api";
 import { useAuth } from "@/contexts/AuthContext";
-import type { Order } from "@/types";
 import DefaultLayout from "@/layouts/default";
 import { title } from "@/components/primitives";
 
@@ -21,9 +23,10 @@ export default function OrdersPage() {
   const loadOrders = async () => {
     try {
       const data = await apiService.getOrders();
+
       setOrders(data);
-    } catch (error) {
-      console.error("Failed to load orders:", error);
+    } catch {
+      alert("Failed to load orders");
     } finally {
       setLoading(false);
     }
@@ -59,8 +62,10 @@ export default function OrdersPage() {
     return (
       <DefaultLayout>
         <div className="text-center py-12">
-          <p className="text-default-500 text-lg mb-4">Please login to view your orders</p>
-          <Button as={Link} to="/login" color="primary">
+          <p className="text-default-500 text-lg mb-4">
+            Please login to view your orders
+          </p>
+          <Button as={Link} color="primary" to="/login">
             Login
           </Button>
         </div>
@@ -79,8 +84,10 @@ export default function OrdersPage() {
           </div>
         ) : orders.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-default-500 text-lg mb-4">You have no orders yet</p>
-            <Button as={Link} to="/books" color="primary">
+            <p className="text-default-500 text-lg mb-4">
+              You have no orders yet
+            </p>
+            <Button as={Link} color="primary" to="/books">
               Browse Books
             </Button>
           </div>
@@ -93,7 +100,9 @@ export default function OrdersPage() {
               >
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="font-semibold text-lg">Order #{order.id.slice(0, 8)}</h3>
+                    <h3 className="font-semibold text-lg">
+                      Order #{order.id.slice(0, 8)}
+                    </h3>
                     <p className="text-sm text-default-500">
                       {new Date(order.createdAt).toLocaleDateString()}
                     </p>
@@ -102,10 +111,14 @@ export default function OrdersPage() {
                     <p className="text-primary font-bold text-xl">
                       ₦{order.totalAmount.toFixed(2)}
                     </p>
-                    <p className={`text-sm ${getPaymentStatusColor(order.paymentStatus)}`}>
+                    <p
+                      className={`text-sm ${getPaymentStatusColor(order.paymentStatus)}`}
+                    >
                       Payment: {order.paymentStatus}
                     </p>
-                    <p className={`text-sm ${getStatusColor(order.orderStatus)}`}>
+                    <p
+                      className={`text-sm ${getStatusColor(order.orderStatus)}`}
+                    >
                       Status: {order.orderStatus}
                     </p>
                   </div>
@@ -121,7 +134,10 @@ export default function OrdersPage() {
                   <h4 className="font-semibold mb-2">Items:</h4>
                   <div className="space-y-2">
                     {order.orderItems.map((item) => (
-                      <div key={item.id} className="flex justify-between text-sm">
+                      <div
+                        key={item.id}
+                        className="flex justify-between text-sm"
+                      >
                         <span>
                           {item.book.title} x {item.quantity}
                         </span>
@@ -134,9 +150,9 @@ export default function OrdersPage() {
                 {order.paymentStatus === "pending" && (
                   <Button
                     as={Link}
-                    to={`/orders/${order.id}/payment`}
                     color="primary"
                     size="sm"
+                    to={`/orders/${order.id}/payment`}
                   >
                     Complete Payment
                   </Button>
@@ -149,4 +165,3 @@ export default function OrdersPage() {
     </DefaultLayout>
   );
 }
-
