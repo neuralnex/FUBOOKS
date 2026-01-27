@@ -17,6 +17,13 @@ export default function CartPage() {
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const getCoverSrc = (coverImage?: string) => {
+    if (!coverImage) return undefined;
+    return coverImage.startsWith("data:image")
+      ? coverImage
+      : `data:image/jpeg;base64,${coverImage}`;
+  };
+
   useEffect(() => {
     loadCart();
   }, []);
@@ -141,11 +148,11 @@ export default function CartPage() {
                 key={item.book.id}
                 className="bg-content1 rounded-lg p-4 shadow-md flex gap-4"
               >
-                {item.book.coverImage && (
+                {getCoverSrc(item.book.coverImage) && (
                   <img
                     alt={item.book.title}
                     className="w-24 h-24 object-cover rounded"
-                    src={`data:image/jpeg;base64,${item.book.coverImage}`}
+                    src={getCoverSrc(item.book.coverImage)}
                   />
                 )}
                 <div className="flex-1">

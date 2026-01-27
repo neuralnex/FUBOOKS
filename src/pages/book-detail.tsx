@@ -18,6 +18,11 @@ export default function BookDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [addingToCart, setAddingToCart] = useState(false);
 
+  const getCoverSrc = (coverImage?: string) => {
+    if (!coverImage) return undefined;
+    return coverImage.startsWith("data:image") ? coverImage : `data:image/jpeg;base64,${coverImage}`;
+  };
+
   useEffect(() => {
     if (id) {
       loadBook();
@@ -98,11 +103,11 @@ export default function BookDetailPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            {book.coverImage ? (
+            {getCoverSrc(book.coverImage) ? (
               <img
                 alt={book.title}
                 className="w-full rounded-lg shadow-lg"
-                src={`data:image/jpeg;base64,${book.coverImage}`}
+                src={getCoverSrc(book.coverImage)}
               />
             ) : (
               <div className="w-full h-96 bg-default-200 rounded-lg flex items-center justify-center">

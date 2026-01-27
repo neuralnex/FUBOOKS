@@ -17,6 +17,13 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"orders" | "books">("books");
 
+  const getCoverSrc = (coverImage?: string) => {
+    if (!coverImage) return undefined;
+    return coverImage.startsWith("data:image")
+      ? coverImage
+      : `data:image/jpeg;base64,${coverImage}`;
+  };
+
   useEffect(() => {
     if (!isAuthenticated || !isAdmin) {
       navigate("/dashboard");
@@ -147,11 +154,11 @@ export default function AdminPage() {
                   key={book.id}
                   className="bg-content1 rounded-lg p-4 shadow-md"
                 >
-                  {book.coverImage && (
+                  {getCoverSrc(book.coverImage) && (
                     <img
                       alt={book.title}
                       className="w-full h-32 object-cover rounded mb-2"
-                      src={`data:image/jpeg;base64,${book.coverImage}`}
+                      src={getCoverSrc(book.coverImage)}
                     />
                   )}
                   <h3 className="font-semibold">{book.title}</h3>

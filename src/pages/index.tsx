@@ -17,6 +17,13 @@ export default function IndexPage() {
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [loading, setLoading] = useState(true);
 
+  const getCoverSrc = (coverImage?: string) => {
+    if (!coverImage) return undefined;
+    return coverImage.startsWith("data:image")
+      ? coverImage
+      : `data:image/jpeg;base64,${coverImage}`;
+  };
+
   useEffect(() => {
     loadNewArrivals();
   }, []);
@@ -218,11 +225,11 @@ export default function IndexPage() {
                   className="flex-shrink-0 w-48 bg-content1 rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden"
                   to={`/books/${book.id}`}
                 >
-                  {book.coverImage ? (
+                  {getCoverSrc(book.coverImage) ? (
                     <img
                       alt={book.title}
                       className="w-full h-64 object-cover"
-                      src={`data:image/jpeg;base64,${book.coverImage}`}
+                      src={getCoverSrc(book.coverImage)}
                     />
                   ) : (
                     <div className="w-full h-64 bg-default-200 flex items-center justify-center">
@@ -285,11 +292,11 @@ export default function IndexPage() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {collection.books.map((book) => (
                   <Link key={book.id} to={`/books/${book.id}`}>
-                    {book.coverImage ? (
+                    {getCoverSrc(book.coverImage) ? (
                       <img
                         alt={book.title}
                         className="w-full h-32 object-cover rounded"
-                        src={`data:image/jpeg;base64,${book.coverImage}`}
+                        src={getCoverSrc(book.coverImage)}
                       />
                     ) : (
                       <div className="w-full h-32 bg-default-200 rounded flex items-center justify-center">

@@ -31,6 +31,11 @@ export default function BooksPage() {
     }
   };
 
+  const getCoverSrc = (coverImage?: string) => {
+    if (!coverImage) return undefined;
+    return coverImage.startsWith("data:image") ? coverImage : `data:image/jpeg;base64,${coverImage}`;
+  };
+
   const filteredBooks = books.filter((book) => {
     const matchesSearch =
       book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -101,11 +106,11 @@ export default function BooksPage() {
             {filteredBooks.map((book) => (
               <Link key={book.id} to={`/books/${book.id}`}>
                 <div className="bg-content1 rounded-lg shadow-md hover:shadow-lg transition-shadow p-4 h-full flex flex-col">
-                  {book.coverImage ? (
+                  {getCoverSrc(book.coverImage) ? (
                     <img
                       alt={book.title}
                       className="w-full h-48 object-cover rounded-lg mb-4"
-                      src={`data:image/jpeg;base64,${book.coverImage}`}
+                      src={getCoverSrc(book.coverImage)}
                     />
                   ) : (
                     <div className="w-full h-48 bg-default-200 rounded-lg mb-4 flex items-center justify-center">
