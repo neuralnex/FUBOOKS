@@ -9,6 +9,7 @@ import { button as buttonStyles } from "@heroui/theme";
 import { title, subtitle } from "@/components/primitives";
 import { useAuth } from "@/contexts/AuthContext";
 import { apiService } from "@/services/api";
+import { BookCard } from "@/components/BookCard";
 import DefaultLayout from "@/layouts/default";
 
 export default function IndexPage() {
@@ -17,16 +18,17 @@ export default function IndexPage() {
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    loadNewArrivals();
+  }, []);
+
   const getCoverSrc = (coverImage?: string) => {
     if (!coverImage) return undefined;
+
     return coverImage.startsWith("data:image")
       ? coverImage
       : `data:image/jpeg;base64,${coverImage}`;
   };
-
-  useEffect(() => {
-    loadNewArrivals();
-  }, []);
 
   const loadNewArrivals = async () => {
     try {
@@ -214,42 +216,10 @@ export default function IndexPage() {
             <p className="text-default-500">Loading books...</p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <div
-              className="flex gap-4 pb-4"
-              style={{ minWidth: "max-content" }}
-            >
-              {newArrivals.map((book) => (
-                <Link
-                  key={book.id}
-                  className="flex-shrink-0 w-48 bg-content1 rounded-lg shadow-md hover:shadow-lg transition-shadow overflow-hidden"
-                  to={`/books/${book.id}`}
-                >
-                  {getCoverSrc(book.coverImage) ? (
-                    <img
-                      alt={book.title}
-                      className="w-full h-64 object-cover"
-                      src={getCoverSrc(book.coverImage)}
-                    />
-                  ) : (
-                    <div className="w-full h-64 bg-default-200 flex items-center justify-center">
-                      <span className="text-default-400">No Image</span>
-                    </div>
-                  )}
-                  <div className="p-4">
-                    <h3 className="font-semibold text-sm mb-1 line-clamp-2">
-                      {book.title}
-                    </h3>
-                    <p className="text-xs text-default-600 mb-2">
-                      {book.author}
-                    </p>
-                    <p className="text-primary font-bold">
-                      ₦{Number(book.price).toFixed(2)}
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {newArrivals.map((book) => (
+              <BookCard key={book.id} book={book} />
+            ))}
           </div>
         )}
       </section>

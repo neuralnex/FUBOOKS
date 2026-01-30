@@ -20,7 +20,10 @@ export default function BookDetailPage() {
 
   const getCoverSrc = (coverImage?: string) => {
     if (!coverImage) return undefined;
-    return coverImage.startsWith("data:image") ? coverImage : `data:image/jpeg;base64,${coverImage}`;
+
+    return coverImage.startsWith("data:image")
+      ? coverImage
+      : `data:image/jpeg;base64,${coverImage}`;
   };
 
   useEffect(() => {
@@ -63,7 +66,6 @@ export default function BookDetailPage() {
     setAddingToCart(true);
     setTimeout(() => {
       setAddingToCart(false);
-      navigate("/cart");
     }, 500);
   };
 

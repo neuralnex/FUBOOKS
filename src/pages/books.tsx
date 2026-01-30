@@ -33,7 +33,10 @@ export default function BooksPage() {
 
   const getCoverSrc = (coverImage?: string) => {
     if (!coverImage) return undefined;
-    return coverImage.startsWith("data:image") ? coverImage : `data:image/jpeg;base64,${coverImage}`;
+
+    return coverImage.startsWith("data:image")
+      ? coverImage
+      : `data:image/jpeg;base64,${coverImage}`;
   };
 
   const filteredBooks = books.filter((book) => {
@@ -106,24 +109,33 @@ export default function BooksPage() {
             {filteredBooks.map((book) => (
               <Link key={book.id} to={`/books/${book.id}`}>
                 <div className="bg-content1 rounded-lg shadow-md hover:shadow-lg transition-shadow p-4 h-full flex flex-col">
-                  {getCoverSrc(book.coverImage) ? (
-                    <img
-                      alt={book.title}
-                      className="w-full h-48 object-cover rounded-lg mb-4"
-                      src={getCoverSrc(book.coverImage)}
-                    />
-                  ) : (
-                    <div className="w-full h-48 bg-default-200 rounded-lg mb-4 flex items-center justify-center">
-                      <span className="text-default-400">No Image</span>
-                    </div>
-                  )}
+                  <div className="w-full aspect-[3/4] bg-default-100 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
+                    {getCoverSrc(book.coverImage) ? (
+                      <img
+                        alt={book.title}
+                        className="w-full h-full object-contain"
+                        src={getCoverSrc(book.coverImage)}
+                      />
+                    ) : (
+                      <span className="text-default-400 text-sm">No Image</span>
+                    )}
+                  </div>
                   <h3 className="font-semibold text-lg mb-2 line-clamp-2">
                     {book.title}
                   </h3>
                   <p className="text-default-600 text-sm mb-2">
                     by {book.author}
                   </p>
-                  <div className="flex items-center justify-between mt-auto">
+                  <div className="mt-1 flex flex-wrap gap-1 text-[10px]">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-success-100 text-success px-2 py-0.5">
+                      <span className="text-[8px]">●</span> SUG pickup
+                    </span>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-primary-50 text-primary px-2 py-0.5">
+                      Eziobodo / Umuchima delivery
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between mt-3">
                     <span className="text-primary font-bold text-lg">
                       ₦{Number(book.price).toFixed(2)}
                     </span>

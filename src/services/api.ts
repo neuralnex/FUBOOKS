@@ -119,6 +119,7 @@ class ApiService {
   async createOrder(data: {
     items: { bookId: string; quantity: number }[];
     deliveryAddress: string;
+    deliveryMethod: "pickup" | "delivery";
   }): Promise<Order> {
     const response = await this.api.post<{ data: Order }>("/orders", data);
 

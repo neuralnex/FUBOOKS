@@ -15,10 +15,16 @@ export default function CartPage() {
   const navigate = useNavigate();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [deliveryAddress, setDeliveryAddress] = useState("");
+  const [fulfilmentMethod, setFulfilmentMethod] = useState<
+    "pickup" | "delivery"
+  >("pickup");
   const [loading, setLoading] = useState(false);
+
+  const DELIVERY_FEE = 500;
 
   const getCoverSrc = (coverImage?: string) => {
     if (!coverImage) return undefined;
+
     return coverImage.startsWith("data:image")
       ? coverImage
       : `data:image/jpeg;base64,${coverImage}`;
@@ -55,10 +61,13 @@ export default function CartPage() {
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
-  const totalAmount = cart.reduce(
+  const itemsTotal = cart.reduce(
     (sum, item) => sum + Number(item.book.price) * item.quantity,
     0,
   );
+
+  const deliveryFee = fulfilmentMethod === "delivery" ? DELIVERY_FEE : 0;
+  const grandTotal = itemsTotal + deliveryFee;
 
   const handleCheckout = async () => {
     if (!isAuthenticated) {
@@ -75,8 +84,13 @@ export default function CartPage() {
       return;
     }
 
-    if (!deliveryAddress || deliveryAddress.length < 10) {
-      alert("Please enter a valid delivery address (at least 10 characters)");
+    if (
+      fulfilmentMethod === "delivery" &&
+      (!deliveryAddress || deliveryAddress.length < 10)
+    ) {
+      alert(
+        "Please enter a valid Eziobodo or Umuchima delivery address (at least 10 characters)",
+      );
 
       return;
     }
@@ -88,7 +102,11 @@ export default function CartPage() {
           bookId: item.book.id,
           quantity: item.quantity,
         })),
-        deliveryAddress,
+        deliveryAddress:
+          fulfilmentMethod === "pickup"
+            ? "SUG Building - Pickup Station"
+            : deliveryAddress,
+        deliveryMethod: fulfilmentMethod,
       });
 
       localStorage.removeItem("cart");
@@ -204,29 +222,105 @@ export default function CartPage() {
           </div>
 
           <div className="lg:col-span-1">
-            <div className="bg-content1 rounded-lg p-6 shadow-md sticky top-4">
-              <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+            <div className="bg-content1 rounded-lg p-6 shadow-md sticky top-4 space-y-4">
+              <h2 className="text-xl font-semibold mb-2">Order Summary</h2>
 
-              <Input
-                className="mb-4"
-                description="Minimum 10 characters"
-                label="Delivery Address"
-                placeholder="Enter your delivery address"
-                value={deliveryAddress}
-                variant="bordered"
-                onChange={(e) => setDeliveryAddress(e.target.value)}
-              />
+              <div className="border border-default-200 rounded-lg p-3 space-y-3">
+                <p className="text-sm font-semibold text-default-700">
+                  Delivery Options
+                </p>
 
-              <div className="space-y-2 mb-4">
-                <div className="flex justify-between">
-                  <span>Subtotal:</span>
-                  <span>₦{totalAmount.toFixed(2)}</span>
+                <button
+                  className={`flex w-full items-start gap-3 rounded-md border px-3 py-2 text-left transition ${
+                    fulfilmentMethod === "pickup"
+                      ? "border-primary bg-primary/5"
+                      : "border-default-200 hover:bg-default-100/60"
+                  }`}
+                  type="button"
+                  onClick={() => setFulfilmentMethod("pickup")}
+                >
+                  <span
+                    className={`mt-1 inline-flex h-4 w-4 items-center justify-center rounded-full border-2 ${
+                      fulfilmentMethod === "pickup"
+                        ? "border-primary"
+                        : "border-default-300"
+                    }`}
+                  >
+                    {fulfilmentMethod === "pickup" && (
+                      <span className="h-2 w-2 rounded-full bg-primary" />
+                    )}
+                  </span>
+                  <span>
+                    <span className="block text-sm font-semibold">
+                      Pick up at SUG Building
+                    </span>
+                    <span className="block text-xs text-default-500">
+                      Free – collect your order at the SUG building pickup
+                      station
+                    </span>
+                  </span>
+                </button>
+
+                <button
+                  className={`flex w-full items-start gap-3 rounded-md border px-3 py-2 text-left transition ${
+                    fulfilmentMethod === "delivery"
+                      ? "border-primary bg-primary/5"
+                      : "border-default-200 hover:bg-default-100/60"
+                  }`}
+                  type="button"
+                  onClick={() => setFulfilmentMethod("delivery")}
+                >
+                  <span
+                    className={`mt-1 inline-flex h-4 w-4 items-center justify-center rounded-full border-2 ${
+                      fulfilmentMethod === "delivery"
+                        ? "border-primary"
+                        : "border-default-300"
+                    }`}
+                  >
+                    {fulfilmentMethod === "delivery" && (
+                      <span className="h-2 w-2 rounded-full bg-primary" />
+                    )}
+                  </span>
+                  <span>
+                    <span className="block text-sm font-semibold">
+                      Deliver to Eziobodo / Umuchima
+                    </span>
+                    <span className="block text-xs text-default-500">
+                      ₦{DELIVERY_FEE.toFixed(0)} delivery fee – enter your full
+                      Eziobodo or Umuchima address below
+                    </span>
+                  </span>
+                </button>
+              </div>
+
+              {fulfilmentMethod === "delivery" && (
+                <Input
+                  className="mb-1"
+                  description="Minimum 10 characters"
+                  label="Delivery Address"
+                  placeholder="Eziobodo or Umuchima address (e.g. Lodge, room, landmarks)"
+                  value={deliveryAddress}
+                  variant="bordered"
+                  onChange={(e) => setDeliveryAddress(e.target.value)}
+                />
+              )}
+
+              <div className="space-y-2 mb-2">
+                <div className="flex justify-between text-sm">
+                  <span>Items total:</span>
+                  <span>₦{itemsTotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span>Delivery:</span>
+                  <span>
+                    {fulfilmentMethod === "pickup"
+                      ? "Free (Pickup)"
+                      : `₦${deliveryFee.toFixed(2)}`}
+                  </span>
                 </div>
                 <div className="flex justify-between font-bold text-lg pt-2 border-t">
-                  <span>Total:</span>
-                  <span className="text-primary">
-                    ₦{totalAmount.toFixed(2)}
-                  </span>
+                  <span>Order total:</span>
+                  <span className="text-primary">₦{grandTotal.toFixed(2)}</span>
                 </div>
               </div>
 

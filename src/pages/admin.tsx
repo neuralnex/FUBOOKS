@@ -19,6 +19,7 @@ export default function AdminPage() {
 
   const getCoverSrc = (coverImage?: string) => {
     if (!coverImage) return undefined;
+
     return coverImage.startsWith("data:image")
       ? coverImage
       : `data:image/jpeg;base64,${coverImage}`;
