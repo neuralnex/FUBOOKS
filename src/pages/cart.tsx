@@ -172,16 +172,16 @@ export default function CartPage() {
             {cart.map((item) => (
               <div
                 key={item.book.id}
-                className="bg-content1 rounded-lg p-4 shadow-md flex gap-4"
+                className="bg-content1 rounded-lg p-4 shadow-md flex flex-col sm:flex-row gap-4"
               >
                 {getCoverSrc(item.book.coverImage) && (
                   <img
                     alt={item.book.title}
-                    className="w-24 h-24 object-cover rounded"
+                    className="w-24 h-24 object-cover rounded flex-shrink-0"
                     src={getCoverSrc(item.book.coverImage)}
                   />
                 )}
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-foreground">{item.book.title}</h3>
                   <p className="text-sm text-default-600">
                     by {item.book.author}
@@ -190,7 +190,7 @@ export default function CartPage() {
                     ₦{Number(item.book.price).toFixed(2)}
                   </p>
                 </div>
-                <div className="flex flex-col items-end gap-2">
+                <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 flex-shrink-0">
                   <div className="flex items-center gap-2">
                     <Button
                       size="sm"
