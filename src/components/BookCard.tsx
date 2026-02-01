@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@heroui/button";
 
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/contexts/ToastContext";
 
 interface BookCardProps {
   book: Book;
@@ -14,6 +15,7 @@ interface BookCardProps {
 export function BookCard({ book, onCartUpdate }: BookCardProps) {
   const navigate = useNavigate();
   const { isAuthenticated, isAdmin } = useAuth();
+  const { showToast } = useToast();
   const [quantity, setQuantity] = useState(1);
   const [addingToCart, setAddingToCart] = useState(false);
 
@@ -59,13 +61,15 @@ export function BookCard({ book, onCartUpdate }: BookCardProps) {
     }
 
     localStorage.setItem("cart", JSON.stringify(existingCart));
+    // Dispatch custom event to update navbar cart count
+    window.dispatchEvent(new Event("cartUpdated"));
     setAddingToCart(true);
     setTimeout(() => {
       setAddingToCart(false);
       if (onCartUpdate) {
         onCartUpdate();
       }
-      alert("Book added to cart");
+      showToast("Book added to cart successfully! 🎉", "success");
       setQuantity(1);
     }, 500);
   };
@@ -126,7 +130,7 @@ export function BookCard({ book, onCartUpdate }: BookCardProps) {
               >
                 -
               </Button>
-              <span className="w-8 text-center text-sm font-semibold">
+              <span className="w-8 text-center text-sm font-semibold text-foreground">
                 {quantity}
               </span>
               <Button

@@ -1,7 +1,7 @@
 import type { CartItem } from "@/types";
 
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@heroui/button";
 import { Input } from "@heroui/input";
 
@@ -13,6 +13,7 @@ import { title } from "@/components/primitives";
 export default function CartPage() {
   const { isAuthenticated, isAdmin } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [fulfilmentMethod, setFulfilmentMethod] = useState<
@@ -30,9 +31,10 @@ export default function CartPage() {
       : `data:image/jpeg;base64,${coverImage}`;
   };
 
+  // Reload cart on mount and when navigating to this page
   useEffect(() => {
     loadCart();
-  }, []);
+  }, [location.pathname]);
 
   const loadCart = () => {
     const savedCart = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -52,6 +54,8 @@ export default function CartPage() {
 
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
+    // Dispatch custom event to update navbar cart count
+    window.dispatchEvent(new Event("cartUpdated"));
   };
 
   const removeItem = (bookId: string) => {
@@ -59,6 +63,8 @@ export default function CartPage() {
 
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
+    // Dispatch custom event to update navbar cart count
+    window.dispatchEvent(new Event("cartUpdated"));
   };
 
   const itemsTotal = cart.reduce(
@@ -111,6 +117,8 @@ export default function CartPage() {
 
       localStorage.removeItem("cart");
       setCart([]);
+      // Dispatch custom event to update navbar cart count
+      window.dispatchEvent(new Event("cartUpdated"));
 
       navigate(`/orders/${order.id}/payment`);
     } catch (error: any) {
@@ -174,7 +182,7 @@ export default function CartPage() {
                   />
                 )}
                 <div className="flex-1">
-                  <h3 className="font-semibold">{item.book.title}</h3>
+                  <h3 className="font-semibold text-foreground">{item.book.title}</h3>
                   <p className="text-sm text-default-600">
                     by {item.book.author}
                   </p>
@@ -193,7 +201,7 @@ export default function CartPage() {
                     >
                       -
                     </Button>
-                    <span className="w-12 text-center">{item.quantity}</span>
+                    <span className="w-12 text-center text-foreground font-semibold">{item.quantity}</span>
                     <Button
                       isDisabled={item.quantity >= item.book.stock}
                       size="sm"
@@ -205,7 +213,7 @@ export default function CartPage() {
                       +
                     </Button>
                   </div>
-                  <p className="text-sm font-semibold">
+                  <p className="text-sm font-semibold text-foreground">
                     ₦{(Number(item.book.price) * item.quantity).toFixed(2)}
                   </p>
                   <Button
@@ -223,10 +231,10 @@ export default function CartPage() {
 
           <div className="lg:col-span-1">
             <div className="bg-content1 rounded-lg p-6 shadow-md sticky top-4 space-y-4">
-              <h2 className="text-xl font-semibold mb-2">Order Summary</h2>
+              <h2 className="text-xl font-semibold mb-2 text-foreground">Order Summary</h2>
 
               <div className="border border-default-200 rounded-lg p-3 space-y-3">
-                <p className="text-sm font-semibold text-default-700">
+                <p className="text-sm font-semibold text-foreground">
                   Delivery Options
                 </p>
 
@@ -251,7 +259,7 @@ export default function CartPage() {
                     )}
                   </span>
                   <span>
-                    <span className="block text-sm font-semibold">
+                    <span className="block text-sm font-semibold text-foreground">
                       Pick up at SUG Building
                     </span>
                     <span className="block text-xs text-default-500">
@@ -282,7 +290,7 @@ export default function CartPage() {
                     )}
                   </span>
                   <span>
-                    <span className="block text-sm font-semibold">
+                    <span className="block text-sm font-semibold text-foreground">
                       Deliver to Eziobodo / Umuchima
                     </span>
                     <span className="block text-xs text-default-500">
@@ -307,19 +315,19 @@ export default function CartPage() {
 
               <div className="space-y-2 mb-2">
                 <div className="flex justify-between text-sm">
-                  <span>Items total:</span>
-                  <span>₦{itemsTotal.toFixed(2)}</span>
+                  <span className="text-foreground">Items total:</span>
+                  <span className="text-foreground font-semibold">₦{itemsTotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span>Delivery:</span>
-                  <span>
+                  <span className="text-foreground">Delivery:</span>
+                  <span className="text-foreground font-semibold">
                     {fulfilmentMethod === "pickup"
                       ? "Free (Pickup)"
                       : `₦${deliveryFee.toFixed(2)}`}
                   </span>
                 </div>
-                <div className="flex justify-between font-bold text-lg pt-2 border-t">
-                  <span>Order total:</span>
+                <div className="flex justify-between font-bold text-lg pt-2 border-t border-default-200">
+                  <span className="text-foreground">Order total:</span>
                   <span className="text-primary">₦{grandTotal.toFixed(2)}</span>
                 </div>
               </div>

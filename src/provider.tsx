@@ -4,6 +4,7 @@ import { HeroUIProvider } from "@heroui/system";
 import { useHref, useNavigate } from "react-router-dom";
 
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ToastProvider } from "@/contexts/ToastContext";
 
 declare module "@react-types/shared" {
   interface RouterConfig {
@@ -16,7 +17,9 @@ export function Provider({ children }: { children: React.ReactNode }) {
 
   return (
     <HeroUIProvider navigate={navigate} useHref={useHref}>
-      <AuthProvider>{children}</AuthProvider>
+      <AuthProvider>
+        <ToastProvider>{children}</ToastProvider>
+      </AuthProvider>
     </HeroUIProvider>
   );
 }

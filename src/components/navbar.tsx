@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, Link as RouterLink, useLocation } from "react-router-dom";
 import { Button } from "@heroui/button";
 import { Link } from "@heroui/link";
 import { Input } from "@heroui/input";
@@ -23,8 +23,10 @@ import { Logo } from "@/components/icons";
 export const Navbar = () => {
   const { isAuthenticated, user, logout, isAdmin } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [cartCount, setCartCount] = useState(0);
 
   const handleLogout = () => {
     logout();
@@ -45,6 +47,39 @@ export const Navbar = () => {
 
     return cart.reduce((sum: number, item: any) => sum + item.quantity, 0);
   };
+
+  useEffect(() => {
+    // Update cart count on mount and when location changes
+    setCartCount(getCartItemCount());
+
+    // Listen for storage changes (when cart is updated in other tabs/windows)
+    const handleStorageChange = () => {
+      setCartCount(getCartItemCount());
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    // Also listen for custom cart update events
+    const handleCartUpdate = () => {
+      setCartCount(getCartItemCount());
+    };
+
+    window.addEventListener("cartUpdated", handleCartUpdate);
+
+    // Poll for changes (in case localStorage is updated in same tab)
+    const interval = setInterval(() => {
+      const newCount = getCartItemCount();
+      if (newCount !== cartCount) {
+        setCartCount(newCount);
+      }
+    }, 500);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+      clearInterval(interval);
+    };
+  }, [location.pathname]);
 
   const navItems = isAuthenticated
     ? siteConfig.navItems
@@ -123,9 +158,9 @@ export const Navbar = () => {
               variant="light"
             >
               <span className="text-xl">🛒</span>
-              {getCartItemCount() > 0 && (
-                <span className="absolute -top-1 -right-1 bg-danger text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {getCartItemCount()}
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-danger text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                  {cartCount > 99 ? "99+" : cartCount}
                 </span>
               )}
             </Button>
@@ -210,9 +245,9 @@ export const Navbar = () => {
               variant="light"
             >
               <span className="text-xl">🛒</span>
-              {getCartItemCount() > 0 && (
-                <span className="absolute -top-1 -right-1 bg-danger text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {getCartItemCount()}
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-danger text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                  {cartCount > 99 ? "99+" : cartCount}
                 </span>
               )}
             </Button>
@@ -248,7 +283,7 @@ export const Navbar = () => {
               {!isAdmin && (
                 <NavbarMenuItem>
                   <Link as={RouterLink} color="foreground" size="lg" to="/cart">
-                    Cart {getCartItemCount() > 0 && `(${getCartItemCount()})`}
+                    Cart {cartCount > 0 && `(${cartCount})`}
                   </Link>
                 </NavbarMenuItem>
               )}

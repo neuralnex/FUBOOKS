@@ -6,6 +6,7 @@ import { Button } from "@heroui/button";
 
 import { apiService } from "@/services/api";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/contexts/ToastContext";
 import DefaultLayout from "@/layouts/default";
 import { title } from "@/components/primitives";
 
@@ -13,6 +14,7 @@ export default function BookDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { isAuthenticated, isAdmin } = useAuth();
+  const { showToast } = useToast();
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
@@ -63,9 +65,12 @@ export default function BookDetailPage() {
     }
 
     localStorage.setItem("cart", JSON.stringify(existingCart));
+    // Dispatch custom event to update navbar cart count
+    window.dispatchEvent(new Event("cartUpdated"));
     setAddingToCart(true);
     setTimeout(() => {
       setAddingToCart(false);
+      showToast("Book added to cart successfully! 🎉", "success");
     }, 500);
   };
 
@@ -166,7 +171,7 @@ export default function BookDetailPage() {
                     >
                       -
                     </Button>
-                    <span className="w-12 text-center">{quantity}</span>
+                    <span className="w-12 text-center text-foreground font-semibold">{quantity}</span>
                     <Button
                       size="sm"
                       variant="bordered"

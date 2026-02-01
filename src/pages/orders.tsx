@@ -6,13 +6,16 @@ import { Button } from "@heroui/button";
 
 import { apiService } from "@/services/api";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/contexts/ToastContext";
 import DefaultLayout from "@/layouts/default";
 import { title } from "@/components/primitives";
 
 export default function OrdersPage() {
   const { isAuthenticated } = useAuth();
+  const { showToast } = useToast();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [cancellingOrderId, setCancellingOrderId] = useState<string | null>(null);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -55,6 +58,34 @@ export default function OrdersPage() {
         return "text-danger";
       default:
         return "text-default";
+    }
+  };
+
+  const canCancelOrder = (order: Order) => {
+    // Can cancel if payment is pending or failed, and order is not delivered
+    return (
+      (order.paymentStatus === "pending" || order.paymentStatus === "failed") &&
+      order.orderStatus !== "delivered"
+    );
+  };
+
+  const handleCancelOrder = async (orderId: string) => {
+    if (!confirm("Are you sure you want to cancel this order?")) {
+      return;
+    }
+
+    setCancellingOrderId(orderId);
+    try {
+      await apiService.cancelOrder(orderId);
+      setOrders((prev) => prev.filter((order) => order.id !== orderId));
+      showToast("Order cancelled successfully", "success");
+    } catch (error: any) {
+      showToast(
+        error.response?.data?.message || "Failed to cancel order",
+        "error",
+      );
+    } finally {
+      setCancellingOrderId(null);
     }
   };
 
@@ -147,16 +178,29 @@ export default function OrdersPage() {
                   </div>
                 </div>
 
-                {order.paymentStatus === "pending" && (
-                  <Button
-                    as={Link}
-                    color="primary"
-                    size="sm"
-                    to={`/orders/${order.id}/payment`}
-                  >
-                    Complete Payment
-                  </Button>
-                )}
+                <div className="flex gap-2 mt-4">
+                  {order.paymentStatus === "pending" && (
+                    <Button
+                      as={Link}
+                      color="primary"
+                      size="sm"
+                      to={`/orders/${order.id}/payment`}
+                    >
+                      Complete Payment
+                    </Button>
+                  )}
+                  {canCancelOrder(order) && (
+                    <Button
+                      color="danger"
+                      size="sm"
+                      variant="light"
+                      isLoading={cancellingOrderId === order.id}
+                      onClick={() => handleCancelOrder(order.id)}
+                    >
+                      Cancel Order
+                    </Button>
+                  )}
+                </div>
               </div>
             ))}
           </div>
