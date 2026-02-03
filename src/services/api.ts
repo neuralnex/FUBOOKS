@@ -138,12 +138,6 @@ class ApiService {
     return response.data.data;
   }
 
-  async cancelOrder(id: string): Promise<Order> {
-    const response = await this.api.delete<{ data: Order }>(`/orders/${id}`);
-
-    return response.data.data;
-  }
-
   async initiatePayment(
     data: PaymentInitiateRequest,
   ): Promise<PaymentInitiateResponse> {

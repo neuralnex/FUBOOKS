@@ -171,7 +171,9 @@ export default function BookDetailPage() {
                     >
                       -
                     </Button>
-                    <span className="w-12 text-center text-foreground font-semibold">{quantity}</span>
+                    <span className="w-12 text-center text-foreground font-semibold">
+                      {quantity}
+                    </span>
                     <Button
                       size="sm"
                       variant="bordered"

@@ -122,25 +122,34 @@ export default function RegisterPage() {
 
               <Input
                 required
+                endContent={
+                  <button
+                    className="text-xs text-default-400 hover:text-foreground focus:outline-none"
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                }
                 label="Password"
                 placeholder="Enter your password"
                 type={showPassword ? "text" : "password"}
                 value={formData.password}
                 variant="bordered"
                 onChange={(e) => handleChange("password", e.target.value)}
-                endContent={
-                  <button
-                    type="button"
-                    className="text-xs text-default-400 hover:text-foreground focus:outline-none"
-                    onClick={() => setShowPassword((v) => !v)}
-                  >
-                    {showPassword ? "Hide" : "Show"}
-                  </button>
-                }
               />
 
               <Input
                 required
+                endContent={
+                  <button
+                    className="text-xs text-default-400 hover:text-foreground focus:outline-none"
+                    type="button"
+                    onClick={() => setShowConfirmPassword((v) => !v)}
+                  >
+                    {showConfirmPassword ? "Hide" : "Show"}
+                  </button>
+                }
                 label="Confirm Password"
                 placeholder="Confirm your password"
                 type={showConfirmPassword ? "text" : "password"}
@@ -148,15 +157,6 @@ export default function RegisterPage() {
                 variant="bordered"
                 onChange={(e) =>
                   handleChange("confirmPassword", e.target.value)
-                }
-                endContent={
-                  <button
-                    type="button"
-                    className="text-xs text-default-400 hover:text-foreground focus:outline-none"
-                    onClick={() => setShowConfirmPassword((v) => !v)}
-                  >
-                    {showConfirmPassword ? "Hide" : "Show"}
-                  </button>
                 }
               />
 

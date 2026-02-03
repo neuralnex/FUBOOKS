@@ -15,7 +15,9 @@ export default function OrdersPage() {
   const { showToast } = useToast();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
-  const [cancellingOrderId, setCancellingOrderId] = useState<string | null>(null);
+  const [cancellingOrderId, setCancellingOrderId] = useState<string | null>(
+    null,
+  );
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -192,9 +194,9 @@ export default function OrdersPage() {
                   {canCancelOrder(order) && (
                     <Button
                       color="danger"
+                      isLoading={cancellingOrderId === order.id}
                       size="sm"
                       variant="light"
-                      isLoading={cancellingOrderId === order.id}
                       onClick={(e) => {
                         e.stopPropagation();
                         handleCancelOrder(order.id);

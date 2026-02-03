@@ -20,13 +20,15 @@ export default function CheckoutPage() {
 
   const [cart, setCart] = useState<CartItem[]>([]);
   const [deliveryAddress, setDeliveryAddress] = useState("");
-  const [fulfilmentMethod, setFulfilmentMethod] =
-    useState<"pickup" | "delivery">("pickup");
+  const [fulfilmentMethod, setFulfilmentMethod] = useState<
+    "pickup" | "delivery"
+  >("pickup");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("cart");
+
     if (stored) {
       try {
         setCart(JSON.parse(stored));
@@ -40,8 +42,7 @@ export default function CheckoutPage() {
     (sum, item) => sum + Number(item.book.price) * item.quantity,
     0,
   );
-  const deliveryFee =
-    fulfilmentMethod === "delivery" ? DELIVERY_FEE : 0;
+  const deliveryFee = fulfilmentMethod === "delivery" ? DELIVERY_FEE : 0;
   const grandTotal = itemsTotal + deliveryFee;
 
   if (!isAuthenticated) {
@@ -86,9 +87,7 @@ export default function CheckoutPage() {
         <div className="py-8">
           <h1 className={title()}>Checkout</h1>
           <div className="text-center py-12 space-y-4">
-            <p className="text-default-500 text-lg">
-              Your cart is empty.
-            </p>
+            <p className="text-default-500 text-lg">Your cart is empty.</p>
             <Button color="primary" onClick={() => navigate("/cart")}>
               Back to Cart
             </Button>
@@ -112,6 +111,7 @@ export default function CheckoutPage() {
     }
 
     const cleanedPhone = phoneNumber.trim();
+
     if (!cleanedPhone || cleanedPhone.replace(/[^\d+]/g, "").length < 10) {
       showToast("Please enter a valid phone number", "error");
 
@@ -173,8 +173,7 @@ export default function CheckoutPage() {
                     <span className="font-semibold">{item.quantity}</span>
                   </p>
                   <p className="text-sm font-semibold text-foreground mt-1">
-                    ₦
-                    {(Number(item.book.price) * item.quantity).toFixed(2)}
+                    ₦{(Number(item.book.price) * item.quantity).toFixed(2)}
                   </p>
                 </div>
               </div>
@@ -294,9 +293,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-between font-bold text-lg pt-2 border-t border-default-200">
                   <span className="text-foreground">Order total:</span>
-                  <span className="text-primary">
-                    ₦{grandTotal.toFixed(2)}
-                  </span>
+                  <span className="text-primary">₦{grandTotal.toFixed(2)}</span>
                 </div>
               </div>
 
@@ -316,5 +313,3 @@ export default function CheckoutPage() {
     </DefaultLayout>
   );
 }
-
-

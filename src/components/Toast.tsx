@@ -42,20 +42,20 @@ function ToastItem({ toast, onClose }: ToastProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -50, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -20, scale: 0.95 }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
       className={`${bgColor} ${textColor} rounded-lg shadow-lg px-4 py-3 min-w-[300px] max-w-[500px] flex items-center gap-3`}
+      exit={{ opacity: 0, y: -20, scale: 0.95 }}
+      initial={{ opacity: 0, y: -50, scale: 0.95 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
     >
       <span className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
         {icon}
       </span>
       <p className="flex-1 font-medium text-sm">{toast.message}</p>
       <button
-        onClick={() => onClose(toast.id)}
-        className="flex-shrink-0 hover:opacity-80 transition-opacity text-lg leading-none"
         aria-label="Close"
+        className="flex-shrink-0 hover:opacity-80 transition-opacity text-lg leading-none"
+        onClick={() => onClose(toast.id)}
       >
         ×
       </button>
@@ -81,4 +81,3 @@ export function ToastContainer({ toasts, onClose }: ToastContainerProps) {
     </div>
   );
 }
-

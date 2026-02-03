@@ -69,6 +69,7 @@ export const Navbar = () => {
     // Poll for changes (in case localStorage is updated in same tab)
     const interval = setInterval(() => {
       const newCount = getCartItemCount();
+
       if (newCount !== cartCount) {
         setCartCount(newCount);
       }

@@ -63,21 +63,21 @@ export default function LoginPage() {
 
               <Input
                 required
+                endContent={
+                  <button
+                    className="text-xs text-default-400 hover:text-foreground focus:outline-none"
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                }
                 label="Password"
                 placeholder="Enter your password"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 variant="bordered"
                 onChange={(e) => setPassword(e.target.value)}
-                endContent={
-                  <button
-                    type="button"
-                    className="text-xs text-default-400 hover:text-foreground focus:outline-none"
-                    onClick={() => setShowPassword((v) => !v)}
-                  >
-                    {showPassword ? "Hide" : "Show"}
-                  </button>
-                }
               />
 
               <Button

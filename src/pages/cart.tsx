@@ -132,8 +132,8 @@ export default function CartPage() {
           <h1 className={title()}>Shopping Cart</h1>
           <Button
             color="danger"
-            variant="bordered"
             size="sm"
+            variant="bordered"
             onClick={clearCart}
           >
             Clear Cart
@@ -155,7 +155,9 @@ export default function CartPage() {
                   />
                 )}
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-foreground">{item.book.title}</h3>
+                  <h3 className="font-semibold text-foreground">
+                    {item.book.title}
+                  </h3>
                   <p className="text-sm text-default-600">
                     by {item.book.author}
                   </p>
@@ -174,7 +176,9 @@ export default function CartPage() {
                     >
                       -
                     </Button>
-                    <span className="w-12 text-center text-foreground font-semibold">{item.quantity}</span>
+                    <span className="w-12 text-center text-foreground font-semibold">
+                      {item.quantity}
+                    </span>
                     <Button
                       isDisabled={item.quantity >= item.book.stock}
                       size="sm"
