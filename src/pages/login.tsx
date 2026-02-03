@@ -12,6 +12,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -64,10 +65,19 @@ export default function LoginPage() {
                 required
                 label="Password"
                 placeholder="Enter your password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 variant="bordered"
                 onChange={(e) => setPassword(e.target.value)}
+                endContent={
+                  <button
+                    type="button"
+                    className="text-xs text-default-400 hover:text-foreground focus:outline-none"
+                    onClick={() => setShowPassword((v) => !v)}
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                }
               />
 
               <Button

@@ -18,6 +18,8 @@ export default function RegisterPage() {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -122,21 +124,39 @@ export default function RegisterPage() {
                 required
                 label="Password"
                 placeholder="Enter your password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={formData.password}
                 variant="bordered"
                 onChange={(e) => handleChange("password", e.target.value)}
+                endContent={
+                  <button
+                    type="button"
+                    className="text-xs text-default-400 hover:text-foreground focus:outline-none"
+                    onClick={() => setShowPassword((v) => !v)}
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                }
               />
 
               <Input
                 required
                 label="Confirm Password"
                 placeholder="Confirm your password"
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 value={formData.confirmPassword}
                 variant="bordered"
                 onChange={(e) =>
                   handleChange("confirmPassword", e.target.value)
+                }
+                endContent={
+                  <button
+                    type="button"
+                    className="text-xs text-default-400 hover:text-foreground focus:outline-none"
+                    onClick={() => setShowConfirmPassword((v) => !v)}
+                  >
+                    {showConfirmPassword ? "Hide" : "Show"}
+                  </button>
                 }
               />
 

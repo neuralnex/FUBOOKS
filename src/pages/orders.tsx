@@ -195,7 +195,10 @@ export default function OrdersPage() {
                       size="sm"
                       variant="light"
                       isLoading={cancellingOrderId === order.id}
-                      onClick={() => handleCancelOrder(order.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCancelOrder(order.id);
+                      }}
                     >
                       Cancel Order
                     </Button>

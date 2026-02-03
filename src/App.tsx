@@ -6,6 +6,7 @@ import RegisterPage from "@/pages/register";
 import BooksPage from "@/pages/books";
 import BookDetailPage from "@/pages/book-detail";
 import CartPage from "@/pages/cart";
+import CheckoutPage from "@/pages/checkout";
 import OrdersPage from "@/pages/orders";
 import PaymentPage from "@/pages/payment";
 import DashboardPage from "@/pages/dashboard";
@@ -22,6 +23,7 @@ function App() {
       <Route element={<BooksPage />} path="/books" />
       <Route element={<BookDetailPage />} path="/books/:id" />
       <Route element={<CartPage />} path="/cart" />
+      <Route element={<CheckoutPage />} path="/checkout" />
       <Route element={<OrdersPage />} path="/orders" />
       <Route element={<PaymentPage />} path="/orders/:id/payment" />
       <Route element={<DashboardPage />} path="/dashboard" />
