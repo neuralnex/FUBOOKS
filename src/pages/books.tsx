@@ -126,15 +126,6 @@ export default function BooksPage() {
                   <p className="text-default-600 text-sm mb-2">
                     by {book.author}
                   </p>
-                  <div className="mt-1 flex flex-wrap gap-1 text-[10px]">
-                    <span className="inline-flex items-center gap-1 rounded-full bg-success-100 text-success px-2 py-0.5">
-                      <span className="text-[8px]">●</span> SUG pickup
-                    </span>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-primary-50 text-primary px-2 py-0.5">
-                      Eziobodo / Umuchima delivery
-                    </span>
-                  </div>
-
                   <div className="flex items-center justify-between mt-3">
                     <span className="text-primary font-bold text-lg">
                       ₦{Number(book.price).toFixed(2)}

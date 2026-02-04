@@ -109,15 +109,6 @@ export function BookCard({ book, onCartUpdate }: BookCardProps) {
           ₦{Number(book.price).toFixed(2)}
         </p>
 
-        <div className="mt-1 flex flex-wrap gap-1 text-[10px]">
-          <span className="inline-flex items-center gap-1 rounded-full bg-success-100 text-success px-2 py-0.5">
-            <span className="text-[8px]">●</span> SUG pickup
-          </span>
-          <span className="inline-flex items-center gap-1 rounded-full bg-primary-50 text-primary px-2 py-0.5">
-            Eziobodo / Umuchima delivery
-          </span>
-        </div>
-
         {book.stock > 0 && !isAdmin && (
           <div className="mt-auto space-y-2">
             <div className="flex items-center justify-center gap-3">
