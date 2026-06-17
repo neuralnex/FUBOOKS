@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/contexts/ToastContext";
 import DefaultLayout from "@/layouts/default";
 import { title } from "@/components/primitives";
+import { Pagination } from "@/components/Pagination";
 
 export default function OrdersPage() {
   const { isAuthenticated } = useAuth();
@@ -18,18 +19,27 @@ export default function OrdersPage() {
   const [cancellingOrderId, setCancellingOrderId] = useState<string | null>(
     null,
   );
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalOrders, setTotalOrders] = useState(0);
 
   useEffect(() => {
     if (isAuthenticated) {
       loadOrders();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, currentPage]);
 
   const loadOrders = async () => {
     try {
-      const data = await apiService.getOrders();
-
-      setOrders(data);
+      setLoading(true);
+      const data = await apiService.getOrdersPaginated(currentPage, 10, {
+        sortBy: 'createdAt',
+        sortOrder: 'DESC',
+      });
+      
+      setOrders(data.orders);
+      setTotalPages(data.totalPages);
+      setTotalOrders(data.total);
     } catch {
       alert("Failed to load orders");
     } finally {
@@ -208,6 +218,20 @@ export default function OrdersPage() {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+        
+        {orders.length > 0 && (
+          <div className="mt-8">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              className="justify-center"
+            />
+            <p className="text-center text-sm text-default-500 mt-4">
+              Showing {orders.length} of {totalOrders} orders
+            </p>
           </div>
         )}
       </div>

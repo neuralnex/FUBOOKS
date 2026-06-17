@@ -8,22 +8,34 @@ import { Input } from "@heroui/input";
 import { apiService } from "@/services/api";
 import DefaultLayout from "@/layouts/default";
 import { title, subtitle } from "@/components/primitives";
+import { Pagination } from "@/components/Pagination";
 
 export default function BooksPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterCategory, setFilterCategory] = useState<string>("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalBooks, setTotalBooks] = useState(0);
 
   useEffect(() => {
     loadBooks();
-  }, []);
+  }, [currentPage, searchTerm, filterCategory]);
 
   const loadBooks = async () => {
     try {
-      const data = await apiService.getBooks();
+      setLoading(true);
+      const data = await apiService.getBooksPaginated(currentPage, 12, {
+        search: searchTerm || undefined,
+        category: filterCategory === "all" ? undefined : filterCategory,
+        sortBy: "createdAt",
+        sortOrder: "DESC",
+      });
 
-      setBooks(data);
+      setBooks(data.books);
+      setTotalPages(data.totalPages);
+      setTotalBooks(data.total);
     } catch {
       alert("Failed to load books");
     } finally {
@@ -150,6 +162,20 @@ export default function BooksPage() {
                 </div>
               </Link>
             ))}
+          </div>
+        )}
+        
+        {books.length > 0 && (
+          <div className="mt-8">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              className="justify-center"
+            />
+            <p className="text-center text-sm text-default-500 mt-4">
+              Showing {books.length} of {totalBooks} books
+            </p>
           </div>
         )}
       </div>

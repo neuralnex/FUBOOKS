@@ -132,6 +132,31 @@ class ApiService {
     return response.data.data;
   }
 
+  async getOrdersPaginated(page: number = 1, limit: number = 20, filters: {
+    status?: string;
+    paymentStatus?: string;
+    sortBy?: string;
+    sortOrder?: string;
+  } = {}): Promise<{
+    orders: Order[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  }> {
+    const response = await this.api.get<{
+      data: {
+        orders: Order[];
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+      };
+    }>('/orders', { params: { page, limit, ...filters } });
+
+    return response.data.data;
+  }
+
   async getOrderById(id: string): Promise<Order> {
     const response = await this.api.get<{ data: Order }>(`/orders/${id}`);
 
@@ -185,6 +210,83 @@ class ApiService {
 
   async cancelOrder(id: string): Promise<Order> {
     const response = await this.api.delete<{ data: Order }>(`/orders/${id}`);
+
+    return response.data.data;
+  }
+
+  async getBooksPaginated(page: number = 1, limit: number = 20, filters: {
+    category?: string;
+    search?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    inStock?: boolean;
+    sortBy?: string;
+    sortOrder?: string;
+  } = {}): Promise<{
+    books: Book[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  }> {
+    const response = await this.api.get<{
+      data: {
+        books: Book[];
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+      };
+    }>('/books', { params: { page, limit, ...filters } });
+
+    return response.data.data;
+  }
+
+  async getAdminOrdersPaginated(page: number = 1, limit: number = 20, filters: {
+    status?: string;
+    paymentStatus?: string;
+    sortBy?: string;
+    sortOrder?: string;
+  } = {}): Promise<{
+    orders: Order[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  }> {
+    const response = await this.api.get<{
+      data: {
+        orders: Order[];
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+      };
+    }>('/admin/orders', { params: { page, limit, ...filters } });
+
+    return response.data.data;
+  }
+
+  async getAdminStats(): Promise<{
+    totalOrders: number;
+    totalRevenue: number;
+    totalBooksSold: number;
+    ordersByStatus: Record<string, number>;
+    ordersByPaymentStatus: Record<string, number>;
+    dailyRevenue: Array<{ date: string; revenue: number }>;
+    topSellingBooks: Array<{ bookId: string; title: string; author: string; quantity: number }>;
+  }> {
+    const response = await this.api.get<{
+      data: {
+        totalOrders: number;
+        totalRevenue: number;
+        totalBooksSold: number;
+        ordersByStatus: Record<string, number>;
+        ordersByPaymentStatus: Record<string, number>;
+        dailyRevenue: Array<{ date: string; revenue: number }>;
+        topSellingBooks: Array<{ bookId: string; title: string; author: string; quantity: number }>;
+      };
+    }>('/admin/stats');
 
     return response.data.data;
   }
