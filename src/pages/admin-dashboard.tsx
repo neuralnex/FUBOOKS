@@ -5,10 +5,21 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@heroui/button";
 import { Divider } from "@heroui/divider";
 import { card } from "@heroui/theme";
-// Note: Install recharts for chart support: npm install recharts
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend } = require("recharts") as any;
+import {
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
 
 import { apiService } from "@/services/api";
 import { useAuth } from "@/contexts/AuthContext";
@@ -358,12 +369,7 @@ export default function AdminDashboardPage() {
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="date" />
                         <YAxis />
-                        <Tooltip
-                          formatter={(value: number) => [
-                            formatCurrency(value),
-                            "Revenue",
-                          ]}
-                        />
+                        <Tooltip />
                         <Legend />
                         <Line
                           type="monotone"
@@ -399,8 +405,8 @@ export default function AdminDashboardPage() {
                           fill="#8884d8"
                           dataKey="value"
                           nameKey="name"
-                          label={({ name, percent }: { name: string; percent: number }) =>
-                            `${name}: ${(percent * 100).toFixed(0)}%`
+                          label={({ name, percent }: { name?: string; percent?: number }) =>
+                            name && percent !== undefined ? `${name}: ${(percent * 100).toFixed(0)}%` : ''
                           }
                         >
                           {statusData.map((entry, index) => (
